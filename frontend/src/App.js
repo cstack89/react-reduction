@@ -8,6 +8,7 @@ import BadgePage from 'pages/BadgePage';
 import ButtonGroupPage from 'pages/ButtonGroupPage';
 import ButtonPage from 'pages/ButtonPage';
 import CardPage from 'pages/CardPage';
+import PictureFramePage from 'pages/PictureFramePage';
 import ChartPage from 'pages/ChartPage';
 // pages
 import DashboardPage from 'pages/DashboardPage';
@@ -29,9 +30,74 @@ const getBasename = () => {
 };
 
 class App extends React.Component {
+	
+	constructor() {
+        super();
+        this.state = { isAuthenticated: false, user: null, show: false};
+        
+//        this.logout = this.logout.bind(this);
+//        this.login = this.login.bind(this);
+        this.onFailure = this.onFailure.bind(this); 
+
+        this.handleShow = this.handleShow.bind(this);
+        this.handleHide = this.handleHide.bind(this);
+        this.testAuth = this.testAuth.bind(this);
+
+      
+    
+    }
+	
+	 componentDidMount() { 
+		 this.testAuth();
+		  
+		 
+		
+	 }
+	 
+	 componentWillUnmount() {
+//		 clearInterval(this.interval);
+	 }
+	 
+	 testAuth() {
+		 fetch("/zuuluser" , { credentials: 'same-origin' })
+	      .then( res => { console.log(res); 
+	      return res.json();
+	      })
+	      .then(
+	        (result) => {
+	        	if(result.name)
+	        		{ 
+	        		 this.setState({
+	        			 isAuthenticated: true, user: result
+	     	          }); 
+	        		}
+
+	        },
+	        // Note: it's important to handle errors here
+	        // instead of a catch() block so that we don't swallow
+	        // exceptions from actual bugs in components.
+	        (error) => {
+	        	 
+	        }
+	      );
+	    }
+	 
+	 onFailure(error) {
+    	 alert(error);
+    }
+	 
+	 handleShow() {
+//	        this.setState({ show: true });
+	      }
+
+	      handleHide() {
+//	    	  this.setState({isAuthenticated: false, user: null})
+//	        this.testAuth();
+	      }
+	
   render() {
     return (
-      <BrowserRouter basename={getBasename()}>
+      <BrowserRouter basename={"/"}>
         <GAListener>
           <Switch>
             <LayoutRoute
@@ -73,6 +139,12 @@ class App extends React.Component {
               path="/cards"
               layout={MainLayout}
               component={CardPage}
+            />" +
+            "<LayoutRoute
+              exact
+              path="/pictureframe"
+              layout={MainLayout}
+              component={PictureFramePage}
             />
             <LayoutRoute
               exact

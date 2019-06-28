@@ -7,8 +7,18 @@ import {
 } from 'react-icons/md';
 import NotificationSystem from 'react-notification-system';
 import { NOTIFICATION_SYSTEM_STYLE } from 'utils/constants';
+import IdleTimer from 'react-idle-timer';
 
 class MainLayout extends React.Component {
+	
+	 constructor(props) {
+		    super(props)
+		    this.idleTimer = null;
+		    this.onAction = this._onAction.bind(this)
+		    this.onActive = this._onActive.bind(this)
+		    this.onIdle = this._onIdle.bind(this)
+		  }
+	 
   static isSidebarOpen() {
     return document
       .querySelector('.cr-sidebar')
@@ -85,6 +95,20 @@ class MainLayout extends React.Component {
     }
     document.querySelector('.cr-sidebar').classList.remove('cr-sidebar--open');
   }
+  
+  _onAction(e) {
+	   // console.log('user did something', e)
+	  }
+	 
+	  _onActive(e) {
+	    console.log('user is active', e)
+	    console.log('time remaining', this.idleTimer.getRemainingTime())
+	  }
+	 
+	  _onIdle(e) {
+	    console.log('user is idle', e)
+	    console.log('last active', this.idleTimer.getLastActiveTime())
+	  }
 
   render() {
     const { children } = this.props;
@@ -104,6 +128,14 @@ class MainLayout extends React.Component {
           }
           style={NOTIFICATION_SYSTEM_STYLE}
         />
+        <IdleTimer
+        ref={ref => { this.idleTimer = ref }}
+        element={document}
+        onActive={this.onActive}
+        onIdle={this.onIdle}
+        onAction={this.onAction}
+        debounce={250}
+        timeout={1000 * 60 * 2} />
       </main>
     );
   }
