@@ -18,6 +18,7 @@ import {
 import MediaFrame from 'components/mediaframe';
 import MediaFrame2 from 'components/MediaFrame2';
 import PictureSessionEditor from 'components/picSessionEditor';
+import MaterialTable from 'material-table';
 // const {MediaFrame} = require('./components/mediaframe');
 // const {PictureSessionEditor} = require('./components/picSessionEditor');
 
@@ -29,7 +30,17 @@ class PictureFramePage extends React.Component {
         	     showEditor: false,
 	    		 picSessions: null,
 	    		 sessionToEdit: null,
-	    		 tags: []
+	    		 tags: [],
+	    		 columns: [
+	    		      { title: 'Name', field: 'name' },
+	    		      { title: 'Surname', field: 'surname' },
+	    		      { title: 'Birth Year', field: 'birthYear', type: 'numeric' },
+	    		      {
+	    		        title: 'Birth Place',
+	    		        field: 'birthCity',
+	    		        lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' },
+	    		      },
+	    		    ]
 	    		 };
        
         this.onFailure = this.onFailure.bind(this); 
@@ -190,8 +201,70 @@ class PictureFramePage extends React.Component {
      
      
      onModalSubmit(theVar) {
-		 console.log(theVar);
-// this.props.modalIsOpen= !this.props.modalIsOpen;
+		 console.log(theVar); 
+		 fetch("/zuulmerlinserver/savepictureframesession", 
+				 { 
+			 		method: 'POST',
+			 		body: JSON.stringify(theVar),
+			 		credentials: 'same-origin', 
+			 	    headers: { 
+			 	        'Content-Type': 'application/json'
+			 	    }
+				 })
+         .then(
+       		  (response) => {
+       			  if (!response.ok) { 
+       				 
+						 console.log(response.status);
+						 console.log(response.statusText);
+						// if(this.interval) {
+						// clearInterval(this.interval);
+						// }
+						//              
+						// this.props.onError();
+						// throw new Error("Rejected 1!");
+       	            } else {
+       	            	// return response.text();
+       	            	 return response.json();
+       	            }
+       			 
+       		  }, 
+       		  (error) => {
+       	 
+					 console.log(error);
+					// if(this.interval) {
+					// clearInterval(this.interval);
+					// }
+					//          
+					// this.props.onError();
+					// reject(new Error("Rejected 2!"));
+       		  }
+         ).then(
+	        (result) => {
+	        	console.log( result); 
+// this.setState({
+// tags: result,
+// mustHaveSource: result,
+// boostedSource: result
+// });
+//	        		
+
+	        },
+	        // Note: it's important to handle errors here
+	        // instead of a catch() block so that we don't swallow
+	        // exceptions from actual bugs in components.
+	        (error) => {
+	        	 
+console.log(error);
+// clearInterval(this.interval);
+// this.props.onError();
+	        }
+	      ).catch(function(error) {
+	    	 
+console.log(error);
+// clearInterval(this.interval);
+// this.props.onError();
+	      });
 		 this.toggleEditor();
 	 }
      

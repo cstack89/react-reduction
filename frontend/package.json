@@ -27,8 +27,11 @@
     "reactstrap": "^7.1.0",
     "victory": "^32.0.0",
     "react-modal": "^3.6.1",
-    "@material-ui/core": "latest",
-    "@material-ui/styles": "latest",
+    "@material-ui/core": "^4.3.3",
+    "@material-ui/styles": "^4.3.3",
+    "material-table": "latest",
+    "date-fns": "latest",
+    "@material-ui/pickers": "latest",
     "react-select": "latest"
   },
   "devDependencies": {

@@ -41,9 +41,9 @@ public class UiApplication extends WebSecurityConfigurerAdapter {
 	                .antMatchers("/*.png","/*.js.*", "/login", "/static/**","/img/**").permitAll() //"/",
 	                .anyRequest().authenticated()
 	                .and()
-	            .csrf()
-	                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-	                ;
+	            .csrf().disable();
+//	                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//	                ;
 	            // @formatter:on
 	}
 //
