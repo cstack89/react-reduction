@@ -1,21 +1,18 @@
 import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/styles';
 import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel'; 
 import FormHelperText from '@material-ui/core/FormHelperText';
-import {
-	  Button,
-	  ButtonGroup,
-	  Card,
-	  CardBody,
-	  CardHeader,
-	  Col,
-	  Modal,
-	  ModalBody,
-	  ModalFooter,
-	  ModalHeader,
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import {  
+	  Col, 
 	  Row,
 	} from 'reactstrap';
 const React = require('react');
@@ -52,22 +49,82 @@ class PictureSessionEditor extends React.Component {
             		deboosted: [],
             		deboostedSource: [],
             		missing: [],
-            		missingSource: [],
-            		tags: [] };
+            		missingSource: [], 
+            		sessionID: null,
+            		interval: 30,
+            		username: null,
+            		privateSession: false,
+            		boostOld: false,
+            		boostNew: false,
+            		boostUnseen: true,
+            		boostNotSeenRecently: true 
+            		};
             
   
-            this.getTags = this.getTags.bind(this); 
+            
             this.handleMustHaveChange  = this.handleMustHaveChange.bind(this);  
             this.handleBoostedChange  = this.handleBoostedChange.bind(this); 
             this.handleDeboostedChange  = this.handleDeboostedChange.bind(this);  
             this.handleMissingChange  = this.handleMissingChange.bind(this); 
-            
+            this.handleInputChange = this.handleInputChange.bind(this); 
             this.onSubmit  = this.onSubmit.bind(this);  
         }
     	
     	 componentDidMount() {
-    		 this.getTags();
     		 
+    		 if(this.props.sessionModel !== null) {
+ 	        	console.log(this.props.sessionModel);
+ 	        	let deboostedfilter = [];
+ 	        	let musthavefilter = [];
+ 	        	let boostedfilter = [];
+ 	        	let missingfilter = [];
+ 	        	let tdeboosted = [];
+ 	        	let tmusthave = [];
+ 	        	let tboosted = [];
+ 	        	let tmissing = [];
+ 	        	if(this.props.sessionModel.missingTags !== null) {
+ 	        		tmissing=this.props.sessionModel.missingTags;
+ 	        		deboostedfilter.concat(tmissing);
+ 	        		musthavefilter.concat(tmissing);
+ 	        		boostedfilter.concat(tmissing); 
+ 	        	}
+ 	        	if(this.props.sessionModel.deboostedTags !== null) {
+ 	        		tdeboosted= this.props.sessionModel.deboostedTags;
+ 	        		missingfilter.concat(tdeboosted);
+ 	        		musthavefilter.concat(tdeboosted);
+ 	        		boostedfilter.concat(tdeboosted); 
+ 	        	}
+ 	        	if(this.props.sessionModel.mustHaveTags !== null) {
+ 	        		tmusthave= this.props.sessionModel.mustHaveTags; 
+ 	        		missingfilter.concat(tmusthave);
+ 	        		deboostedfilter.concat(tmusthave);
+ 	        		boostedfilter.concat(tmusthave); 
+ 	        	}
+ 	        	if(this.props.sessionModel.boostedTags !== null) {
+ 	        		tboosted= this.props.sessionModel.boostedTags; 
+ 	        		missingfilter.concat(tboosted);
+ 	        		deboostedfilter.concat(tboosted);
+ 	        		musthavefilter.concat(tboosted); 
+ 	        	} 
+ 	        	this.setState({ 
+ 	        		missing: tmissing,
+ 	        		deboosted: tdeboosted,
+ 	        		musthave: tmusthave,
+ 	        		boosted: tboosted,
+ 	           		deboostedSource:  this.props.tags.filter(tag => deboostedfilter.indexOf(tag) ===-1),
+ 	           		boostedSource:  this.props.tags.filter(tag => boostedfilter.indexOf(tag) ===-1),
+ 	           		mustHaveSource:  this.props.tags.filter(tag => musthavefilter.indexOf(tag) ===-1),
+ 	           		missingSource:  this.props.tags.filter(tag => missingfilter.indexOf(tag) ===-1),
+ 	           		sessionID: this.props.sessionModel.sessionid,
+ 	           		interval: this.props.sessionModel.interval,
+ 	           		username: this.props.sessionModel.username,
+ 	           		privateSession: this.props.sessionModel.privateSession,
+ 	           		boostOld: this.props.sessionModel.boostOld,
+ 	           		boostNew: this.props.sessionModel.boostNew,
+ 	           		boostUnseen: this.props.sessionModel.boostUnseen,
+ 	           		boostNotSeenRecently: this.props.sessionModel.boostNotSeenRecently
+ 	           		});
+ 	        }
     		
     	 }
     	 
@@ -77,74 +134,16 @@ class PictureSessionEditor extends React.Component {
     	 
         
         
-    	 getTags() {
-    			fetch("/zuulmerlinserver/getPictureTags", { credentials: 'same-origin' })
-                .then(
-              		  (response) => {
-              			  if (!response.ok) { 
-              				 
-// console.log(response.status);
-// console.log(response.statusText);
-// if(this.interval) {
-// clearInterval(this.interval);
-// }
-//                 
-// this.props.onError();
-// throw new Error("Rejected 1!");
-              	            } else {
-// return response.text();
-              	            	 return response.json();
-              	            }
-              			 
-              		  }, 
-              		  (error) => {
-              	 
-// console.log(error);
-// if(this.interval) {
-// clearInterval(this.interval);
-// }
-//             
-// this.props.onError();
-// reject(new Error("Rejected 2!"));
-              		  }
-                ).then(
-      	        (result) => {
-      	        	console.log( result); 
-  	        		 this.setState({
-  	        			tags: result,
-  	        			mustHaveSource: result,
-  	        			boostedSource: result,
-  	        			deboostedSource: result,
-  	        			missingSource: result
-  	     	          }); 
-      	        		
-
-      	        },
-      	        // Note: it's important to handle errors here
-      	        // instead of a catch() block so that we don't swallow
-      	        // exceptions from actual bugs in components.
-      	        (error) => {
-      	        	 
-// console.log(error);
-// clearInterval(this.interval);
-// this.props.onError();
-      	        }
-      	      ).catch(function(error) {
-      	    	 
-// console.log(error);
-// clearInterval(this.interval);
-// this.props.onError();
-      	      });
-        } 
+    	 
     	 handleMustHaveChange(event ) {
     		 
     		 let missingfilter = event.target.value.concat(this.state.boosted,this.state.deboosted);
     		 let boostedfilter = event.target.value.concat(this.state.deboosted,this.state.missing);
          	let deboostedfilter = event.target.value.concat(this.state.boosted,this.state.missing);
         	this.setState({ musthave: event.target.value,
-        		missingSource:  this.state.tags.filter(tag => missingfilter.indexOf(tag) ===-1),
-        		deboostedSource:  this.state.tags.filter(tag => deboostedfilter.indexOf(tag) ===-1),
-        		boostedSource:  this.state.tags.filter(tag => boostedfilter.indexOf(tag) ===-1)
+        		missingSource:  this.props.tags.filter(tag => missingfilter.indexOf(tag) ===-1),
+        		deboostedSource:  this.props.tags.filter(tag => deboostedfilter.indexOf(tag) ===-1),
+        		boostedSource:  this.props.tags.filter(tag => boostedfilter.indexOf(tag) ===-1)
         	});
          	
          }
@@ -154,9 +153,9 @@ class PictureSessionEditor extends React.Component {
         	let musthavefilter = event.target.value.concat(this.state.deboosted,this.state.missing);
         	let deboostedfilter = event.target.value.concat(this.state.musthave,this.state.missing);
        	this.setState({ boosted: event.target.value,
-       		missingSource:  this.state.tags.filter(tag => missingfilter.indexOf(tag) ===-1),
-       		deboostedSource:  this.state.tags.filter(tag => deboostedfilter.indexOf(tag) ===-1),
-       		mustHaveSource:  this.state.tags.filter(tag => musthavefilter.indexOf(tag) ===-1)
+       		missingSource:  this.props.tags.filter(tag => missingfilter.indexOf(tag) ===-1),
+       		deboostedSource:  this.props.tags.filter(tag => deboostedfilter.indexOf(tag) ===-1),
+       		mustHaveSource:  this.props.tags.filter(tag => musthavefilter.indexOf(tag) ===-1)
        	});
     	
         }
@@ -167,9 +166,9 @@ class PictureSessionEditor extends React.Component {
 	    	let musthavefilter = event.target.value.concat(this.state.boosted,this.state.missing);
 	    	let boostedfilter = event.target.value.concat(this.state.musthave,this.state.missing);
 	   	this.setState({ deboosted: event.target.value,
-	   		missingSource:  this.state.tags.filter(tag => missingfilter.indexOf(tag) ===-1),
-	   		boostedSource:  this.state.tags.filter(tag => boostedfilter.indexOf(tag) ===-1),
-	   		mustHaveSource:  this.state.tags.filter(tag => musthavefilter.indexOf(tag) ===-1)
+	   		missingSource:  this.props.tags.filter(tag => missingfilter.indexOf(tag) ===-1),
+	   		boostedSource:  this.props.tags.filter(tag => boostedfilter.indexOf(tag) ===-1),
+	   		mustHaveSource:  this.props.tags.filter(tag => musthavefilter.indexOf(tag) ===-1)
 	   		});
         	
         }
@@ -178,9 +177,9 @@ class PictureSessionEditor extends React.Component {
         	let musthavefilter = event.target.value.concat(this.state.boosted,this.state.deboosted);
         	let boostedfilter = event.target.value.concat(this.state.musthave,this.state.deboosted);
        	this.setState({ missing: event.target.value,
-       		deboostedSource:  this.state.tags.filter(tag => deboostedfilter.indexOf(tag) ===-1),
-       		boostedSource:  this.state.tags.filter(tag => boostedfilter.indexOf(tag) ===-1),
-       		mustHaveSource:  this.state.tags.filter(tag => musthavefilter.indexOf(tag) ===-1)
+       		deboostedSource:  this.props.tags.filter(tag => deboostedfilter.indexOf(tag) ===-1),
+       		boostedSource:  this.props.tags.filter(tag => boostedfilter.indexOf(tag) ===-1),
+       		mustHaveSource:  this.props.tags.filter(tag => musthavefilter.indexOf(tag) ===-1)
        		});
        }
        
@@ -194,111 +193,183 @@ class PictureSessionEditor extends React.Component {
             return response;
         }
         
-        onSubmit() {
-        	this.props.onSubmit("test");
+        onSubmit(event ) {
+        	this.props.onSubmit(event);
+        	event.preventDefault();
         }
         
-          
+        handleInputChange(event) {
+            const target = event.target;
+            const value = target.type === 'checkbox' ? target.checked : target.value;
+            const name = target.name;
+
+            this.setState({
+              [name]: value
+            });
+          }
       
-        
         render() {  
+        	
         	
                 
 
             return (
-            		<Modal
-                    isOpen={this.props.modalIsOpen}
-                    toggle={this.props.toggle}  >  
-            		<ModalHeader toggle={this.props.toggle}>Picture Session Editor</ModalHeader>
-                    <ModalBody >
+            		<Dialog open={this.props.modalIsOpen} onClose={this.props.toggle} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Picture Session Editor</DialogTitle>
+            		
+                    <DialogContent>
                    
-                    <form className="picSessionForm" autoComplete="off">
+                    <form className="picSessionForm" autoComplete="off" onSubmit={this.onSubmit}>
                     <Row>
-                    <FormControl className="picSessionFormControl">
-                      <InputLabel htmlFor="amusthave">Must Have</InputLabel>
-                       
-                      <Select  multiple value={this.state.musthave}
-	                    onChange={this.handleMustHaveChange}
-	                    input={<Input id="musthave" name="musthave" />}
-	                    
-	                  >
-	                   {this.state.mustHaveSource.map(tag => (
-	                     <MenuItem key={tag} value={tag} >
-	                       {tag}
-	                     </MenuItem>
-	                   ))}
-	                 </Select>
-                    </FormControl>
-                    </Row> 
-                    <Row>
-                    <FormControl className="picSessionFormControl" >
-                    	<InputLabel htmlFor="boosted">Boosted</InputLabel>
-                     
-	                    <Select  multiple value={this.state.boosted}
-		                    onChange={this.handleBoostedChange}
-		                    input={<Input id="boosted" name="boosted" />} 
+                    <Col md={6} sm={6} xs={12} className="mb-3">
+	                    <FormControl className="picSessionFormControl">
+	                      <InputLabel htmlFor="amusthave">Must Have</InputLabel>
+	                       
+	                      <Select  multiple value={this.state.musthave}
+		                    onChange={this.handleMustHaveChange}
+		                    input={<Input id="musthave" name="musthave" />}
 		                    
 		                  >
-		                   {this.state.boostedSource.map(tag => (
+		                   {this.state.mustHaveSource.map(tag => (
+		                     <MenuItem key={tag} value={tag} >
+		                       {tag}
+		                     </MenuItem>
+		                   ))}
+		                 </Select>
+	                    </FormControl>
+	                    </Col>
+	                    <Col md={6} sm={6} xs={12} className="mb-3">
+		                    <FormControl className="picSessionFormControl" >
+	                    		<InputLabel htmlFor="boosted">Boosted</InputLabel>
+	                     
+			                    <Select  multiple value={this.state.boosted}
+				                    onChange={this.handleBoostedChange}
+				                    input={<Input id="boosted" name="boosted" />} 
+				                    
+				                  >
+				                   {this.state.boostedSource.map(tag => (
+				                     <MenuItem key={tag} value={tag} >
+				                       {tag}
+				                     </MenuItem>
+				                   ))}
+				                 </Select>
+		                  </FormControl>
+	                    </Col>
+                    </Row> 
+                    <Row>
+                    <Col md={6} sm={6} xs={12} className="mb-3">
+                    <FormControl className="picSessionFormControl" >
+                  	<InputLabel htmlFor="deboosted">Should Not Have</InputLabel>
+                   
+	                    <Select  multiple value={this.state.deboosted}
+		                    onChange={this.handleDeboostedChange}
+		                    input={<Input id="deboosted" name="deboosted" />} 
+		                    
+		                  >
+		                   {this.state.deboostedSource.map(tag => (
 		                     <MenuItem key={tag} value={tag} >
 		                       {tag}
 		                     </MenuItem>
 		                   ))}
 		                 </Select>
 	                  </FormControl>
+                    </Col>
+                    <Col md={6} sm={6} xs={12} className="mb-3">
+                    <FormControl className="picSessionFormControl" >
+                  	<InputLabel htmlFor="missing">Must Not Have</InputLabel>
+                   
+	                    <Select  multiple value={this.state.missing}
+		                    onChange={this.handleMissingChange}
+		                    input={<Input id="missing" name="missing" />} 
+		                    
+		                  >
+		                   {this.state.missingSource.map(tag => (
+		                     <MenuItem key={tag} value={tag} >
+		                       {tag}
+		                     </MenuItem>
+		                   ))}
+		                 </Select>
+	                  </FormControl>
+                    </Col>
+                    
+                    
+                	
+            			
+                   
 	                  </Row> 
 	                    <Row>
-	                  <FormControl className="picSessionFormControl" >
-	                  	<InputLabel htmlFor="deboosted">Should Not Have</InputLabel>
-	                   
-		                    <Select  multiple value={this.state.deboosted}
-			                    onChange={this.handleDeboostedChange}
-			                    input={<Input id="deboosted" name="deboosted" />} 
-			                    
-			                  >
-			                   {this.state.deboostedSource.map(tag => (
-			                     <MenuItem key={tag} value={tag} >
-			                       {tag}
-			                     </MenuItem>
-			                   ))}
-			                 </Select>
-		                  </FormControl>
+	                    <Col md={3} sm={3} xs={6} className="mb-3">
+	                    <label>
+		                    Boost Old:
+		                    <input
+		                      name="boostOld"
+		                      type="checkbox"
+		                      checked={this.state.boostOld} 
+	                    	  onChange={this.handleInputChange}/>
+		                  </label>
+	                    </Col>
+	                    <Col md={3} sm={3} xs={6} className="mb-3">
+	                    <label>
+		                    Boost New:
+		                    <input
+		                      name="boostNew"
+		                      type="checkbox"
+		                      checked={this.state.boostNew}  
+	                    	  onChange={this.handleInputChange}/>
+		                  </label>
+	                    </Col>
+	                    <Col md={3} sm={3} xs={6} className="mb-3">
+	                    <label>
+		                    Boost Unseen:
+		                    <input
+		                      name="boostUnseen"
+		                      type="checkbox"
+		                      checked={this.state.boostUnseen} 
+	                          onChange={this.handleInputChange}/>
+		                  </label>
+	                    </Col>
+	                    <Col md={3} sm={3} xs={6} className="mb-3">
+	                    <label>
+		                    Boost Not Seen Recently:
+		                    <input
+		                      name="boostNotSeenRecently"
+		                      type="checkbox"
+		                      checked={this.state.boostNotSeenRecently}
+	                    	  onChange={this.handleInputChange}/>
+		                  </label>
+	                    </Col>
+	                     
+	            		
+	                 
 		                  </Row> 
 		                    <Row>
-		                  <FormControl className="picSessionFormControl" >
-		                  	<InputLabel htmlFor="missing">Must Not Have</InputLabel>
-		                   
-			                    <Select  multiple value={this.state.missing}
-				                    onChange={this.handleMissingChange}
-				                    input={<Input id="missing" name="missing" />} 
+			                    <Col md={6} sm={6} xs={12} className="mb-3"> 
+				                    <InputLabel htmlFor="interval">Interval</InputLabel>
 				                    
-				                  >
-				                   {this.state.missingSource.map(tag => (
-				                     <MenuItem key={tag} value={tag} >
-				                       {tag}
-				                     </MenuItem>
-				                   ))}
-				                 </Select>
-			                  </FormControl>
+				                    <Input type="number" name="interval" id="intervalBx" placeholder="seconds">{this.state.interval} </Input>
+				                  </Col>
+			                    <Col md={6} sm={6} xs={12} className="mb-3"> 
+			                    </Col>
+		                 
+			                  </Row>  
+			                  <Row>
+			                    <Col md={6} sm={6} xs={12} className="mb-3">
+			                    	<Button  type="submit"    > 
+			                    	Submit
+			                    	</Button>
+				                 </Col>
+			                    <Col md={6} sm={6} xs={12} className="mb-3">
+			                    <Button color="secondary" onClick={this.props.toggle}>
+			                      Cancel
+			                    </Button>
+			                    </Col>
+		                 
 			                  </Row>  
                   </form>
-			        
-			       
-			        
-			        
-			    
-			      
+			          
                     	 
-                    </ModalBody> 
-                    <ModalFooter>
-                    <Button color="primary" onClick={this.onSubmit}>
-                      Do Something
-                    </Button>{' '}
-                    <Button color="secondary" onClick={this.props.toggle}>
-                      Cancel
-                    </Button>
-                  </ModalFooter>
-                  </Modal>
+                    </DialogContent>  
+                  </Dialog>
             		
             		
                
