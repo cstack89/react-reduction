@@ -29,13 +29,13 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
+			<!--  <dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-bom</artifactId>
 				<version>${spring-security.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
-			</dependency>
+			</dependency> -->
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
@@ -52,23 +52,23 @@
 			<artifactId>spring-cloud-starter-zuul</artifactId>
 			<version>1.4.6.RELEASE</version>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-oauth2</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
 			<version>2.3.4.RELEASE</version>
-		</dependency>
+		</dependency>  -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-jwt</artifactId>
@@ -166,7 +166,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			  <plugin>
+			  <!-- <plugin>
 	     		 <groupId>org.apache.maven.plugins</groupId>
 			      <artifactId>maven-antrun-plugin</artifactId>
 			      <version>1.8</version>
@@ -194,8 +194,7 @@
 			          <groupId>com.jcraft</groupId>
 			          <artifactId>jsch</artifactId>
 			          <version>0.1.55</version>
-			        </dependency>
-			        <!-- https://mvnrepository.com/artifact/org.apache.ant/ant-jsch -->
+			        </dependency> 
 					<dependency>
 					    <groupId>org.apache.ant</groupId>
 					    <artifactId>ant-jsch</artifactId>
@@ -203,7 +202,7 @@
 					</dependency>
 
 			      </dependencies>
-		    </plugin> 
+		    </plugin> -->
 		</plugins>
 	</build>
 

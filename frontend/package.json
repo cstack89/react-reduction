@@ -2,7 +2,7 @@
   "name": "react-reduction",
   "version": "1.0.0",
   "private": false,
-  "homepage": "https://smarthome.fledglingmaker.com",
+  "homepage": "http://localhost:8080",
   "dependencies": {
     "bootstrap": "4.3.1",
     "chart.js": "2.7.2",
