@@ -48,60 +48,60 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-zuul</artifactId>
-			<version>1.4.6.RELEASE</version>
-		</dependency>
-		<!--<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-oauth2</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency> -->
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<!-- <dependency>
+		<!--  <dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
-			<version>2.3.4.RELEASE</version>
-		</dependency>  -->
+			<version>2.3.6.RELEASE</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-jwt</artifactId>
 			<version>1.0.10.RELEASE</version>
-		</dependency>
+		</dependency> 
+		
+		
+	
 		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-oauth2</artifactId>
+		</dependency> -->
+		<!--<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency> -->
+		
+		  
+		
+		
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<!--  <dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+			<version>1.4.6.RELEASE</version>
+		</dependency> -->
+		<!--  <dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>jwks-rsa</artifactId>
+			<version>${jwks-rsa.version}</version>
+		</dependency> -->
+		<!-- <dependency> <groupId>com.fledglingmaker</groupId> <artifactId>stackHomeCommon</artifactId> 
+			<version>0.0.1-SNAPSHOT</version> </dependency> -->
+
+
+
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-eureka</artifactId>
-			<version>1.4.6.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>com.auth0</groupId>
-			<artifactId>jwks-rsa</artifactId>
-			<version>${jwks-rsa.version}</version>
-		</dependency>
-		<!-- <dependency> <groupId>com.fledglingmaker</groupId> <artifactId>stackHomeCommon</artifactId> 
-			<version>0.0.1-SNAPSHOT</version> </dependency> -->
-
 	</dependencies>
 
 
@@ -162,6 +162,34 @@
 						</configuration>
 						<goals>
 							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>2.0.0</version>
+				<configuration>
+					<to>
+						<image>smarthome.fledglingmaker.com:5000/stacksmarthome:latest</image>
+					</to>
+					<from>
+						<image>registry://openjdk:8-jre-alpine</image>
+						<!-- <image>registry://gcr.io/distroless/java</image> -->
+					</from>
+					<allowInsecureRegistries>true</allowInsecureRegistries>
+
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>exec</goal>
 						</goals>
 					</execution>
 				</executions>

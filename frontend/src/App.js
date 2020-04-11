@@ -1,5 +1,4 @@
 import { STATE_LOGIN, STATE_SIGNUP } from 'components/AuthForm';
-import GAListener from 'components/GAListener';
 import { EmptyLayout, LayoutRoute, MainLayout } from 'components/Layout';
 import AlertPage from 'pages/AlertPage';
 import AuthModalPage from 'pages/AuthModalPage';
@@ -8,7 +7,7 @@ import BadgePage from 'pages/BadgePage';
 import ButtonGroupPage from 'pages/ButtonGroupPage';
 import ButtonPage from 'pages/ButtonPage';
 import CardPage from 'pages/CardPage';
-import PictureFramePage from 'pages/PictureFramePage';
+import PictureFramePage2 from 'pages/PictureFramePage2';
 import ChartPage from 'pages/ChartPage';
 // pages
 import DashboardPage from 'pages/DashboardPage';
@@ -24,6 +23,11 @@ import React from 'react';
 import componentQueries from 'react-component-queries';
 import { BrowserRouter, Redirect, Switch } from 'react-router-dom';
 import './styles/reduction.scss';
+
+import { AuthenticationProvider, oidcLog, InMemoryWebStorage } from '@axa-fr/react-oidc-context';
+import CustomCallback from './pages/CustomCallback';
+import oidcConfiguration from './AuthConfiguration';
+import { withOidcSecure } from '@axa-fr/react-oidc-context';
 
 const getBasename = () => {
   return `/${process.env.PUBLIC_URL.split('/').pop()}`;
@@ -49,9 +53,7 @@ class App extends React.Component {
 	
 	 componentDidMount() { 
 		 this.testAuth();
-		  
-		 
-		
+		  	
 	 }
 	 
 	 componentWillUnmount() {
@@ -59,7 +61,7 @@ class App extends React.Component {
 	 }
 	 
 	 testAuth() {
-		 fetch("/zuuluser" , { credentials: 'same-origin' })
+		 fetch("/admin/user" , { credentials: 'same-origin' })
 	      .then( res => { console.log(res); 
 	      return res.json();
 	      })
@@ -97,137 +99,143 @@ class App extends React.Component {
 	
   render() {
     return (
-      <BrowserRouter basename={"/"}>
-        <GAListener>
-          <Switch>
-            <LayoutRoute
-              exact
-              path="/login"
-              layout={EmptyLayout}
-              component={props => (
-                <AuthPage {...props} authState={STATE_LOGIN} />
-              )}
-            />
-            <LayoutRoute
-              exact
-              path="/signup"
-              layout={EmptyLayout}
-              component={props => (
-                <AuthPage {...props} authState={STATE_SIGNUP} />
-              )}
-            />
-            <LayoutRoute
-              exact
-              path="/login-modal"
-              layout={MainLayout}
-              component={AuthModalPage}
-            />
-            <LayoutRoute
-              exact
-              path="/"
-              layout={MainLayout}
-              component={DashboardPage}
-            />
-            <LayoutRoute
-              exact
-              path="/buttons"
-              layout={MainLayout}
-              component={ButtonPage}
-            />
-            <LayoutRoute
-              exact
-              path="/cards"
-              layout={MainLayout}
-              component={CardPage}
-            />" +
-            "<LayoutRoute
-              exact
-              path="/pictureframe"
-              layout={MainLayout}
-              component={PictureFramePage}
-            />
-            <LayoutRoute
-              exact
-              path="/widgets"
-              layout={MainLayout}
-              component={WidgetPage}
-            />
-            <LayoutRoute
-              exact
-              path="/typography"
-              layout={MainLayout}
-              component={TypographyPage}
-            />
-            <LayoutRoute
-              exact
-              path="/alerts"
-              layout={MainLayout}
-              component={AlertPage}
-            />
-            <LayoutRoute
-              exact
-              path="/tables"
-              layout={MainLayout}
-              component={TablePage}
-            />
-            <LayoutRoute
-              exact
-              path="/badges"
-              layout={MainLayout}
-              component={BadgePage}
-            />
-            <LayoutRoute
-              exact
-              path="/button-groups"
-              layout={MainLayout}
-              component={ButtonGroupPage}
-            />
-            <LayoutRoute
-              exact
-              path="/dropdowns"
-              layout={MainLayout}
-              component={DropdownPage}
-            />
-            <LayoutRoute
-              exact
-              path="/progress"
-              layout={MainLayout}
-              component={ProgressPage}
-            />
-            <LayoutRoute
-              exact
-              path="/modals"
-              layout={MainLayout}
-              component={ModalPage}
-            />
-            <LayoutRoute
-              exact
-              path="/forms"
-              layout={MainLayout}
-              component={FormPage}
-            />
-            <LayoutRoute
-              exact
-              path="/input-groups"
-              layout={MainLayout}
-              component={InputGroupPage}
-            />
-            <LayoutRoute
-              exact
-              path="/charts"
-              layout={MainLayout}
-              component={ChartPage}
-            />
-            <LayoutRoute
-              exact
-              path="/register"
-              layout={MainLayout}
-              component={AuthPage}
-            />
-            <Redirect to="/" />
-          </Switch>
-        </GAListener>
-      </BrowserRouter>
+		<AuthenticationProvider
+	      configuration={oidcConfiguration}
+	      loggerLevel={oidcLog.DEBUG}
+	      isEnabled={true}
+	      callbackComponentOverride={CustomCallback}
+	      UserStore={InMemoryWebStorage}
+	    >
+	      <BrowserRouter basename={"/"}>
+	          <Switch>
+	            <LayoutRoute
+	              exact
+	              path="/login"
+	              layout={EmptyLayout}
+	              component={props => (
+	                <AuthPage {...props} authState={STATE_LOGIN} />
+	              )}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/signup"
+	              layout={EmptyLayout}
+	              component={props => (
+	                <AuthPage {...props} authState={STATE_SIGNUP} />
+	              )}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/login-modal"
+	              layout={MainLayout}
+	              component={AuthModalPage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/"
+	              layout={MainLayout}
+	              component={DashboardPage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/buttons"
+	              layout={MainLayout}
+	              component={ButtonPage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/cards"
+	              layout={MainLayout}
+	              component={withOidcSecure(CardPage)}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/pictureframe"
+	              layout={MainLayout}
+	              component={withOidcSecure(PictureFramePage2)}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/widgets"
+	              layout={MainLayout}
+	              component={WidgetPage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/typography"
+	              layout={MainLayout}
+	              component={TypographyPage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/alerts"
+	              layout={MainLayout}
+	              component={AlertPage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/tables"
+	              layout={MainLayout}
+	              component={TablePage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/badges"
+	              layout={MainLayout}
+	              component={BadgePage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/button-groups"
+	              layout={MainLayout}
+	              component={ButtonGroupPage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/dropdowns"
+	              layout={MainLayout}
+	              component={DropdownPage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/progress"
+	              layout={MainLayout}
+	              component={ProgressPage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/modals"
+	              layout={MainLayout}
+	              component={ModalPage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/forms"
+	              layout={MainLayout}
+	              component={FormPage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/input-groups"
+	              layout={MainLayout}
+	              component={InputGroupPage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/charts"
+	              layout={MainLayout}
+	              component={ChartPage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/register"
+	              layout={MainLayout}
+	              component={AuthPage}
+	            />   
+	            <Redirect to="/" />
+	          </Switch> 
+	      </BrowserRouter>
+      </AuthenticationProvider>
     );
   }
 }

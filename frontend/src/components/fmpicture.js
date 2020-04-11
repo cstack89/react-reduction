@@ -1,4 +1,10 @@
 import ReactDOM from 'react-dom';
+import { compose } from 'recompose';
+import {
+  withFetchRedirectionOn403,
+  withFetchSilentAuthenticateAndRetryOn401,
+} from '@axa-fr/react-oidc-fetch-core';
+import { withAuthentication,withFetchToken } from '@axa-fr/react-oidc-context-fetch';
 const React = require('react');
 //tag::fmpicture[] 
 class FMPicture extends React.Component {
@@ -31,7 +37,16 @@ class FMPicture extends React.Component {
         
         
         getPicName() { 
-        	fetch("/zuulmerlinserver/requestPictureLocation", { credentials: 'same-origin' })
+        	
+        	let magicfetch = fetch =>
+        	  compose(
+        			    withFetchToken(fetch),
+        			    withFetchSilentAuthenticateAndRetryOn401(),
+        			    withFetchRedirectionOn403()
+        			  );
+        	console.log(magicfetch.props);
+        	console.log(magicfetch.fetch);
+        	fetch("/merlinserver/requestPictureLocation")
               .then(
             		  (response) => {
             			  if (!response.ok) { 
@@ -160,6 +175,10 @@ class FMPicture extends React.Component {
                 	let heightDif = window.innerHeight - this.state.curPic1Meta.height;
                 	let widthDif = window.innerWidth - this.state.curPic1Meta.width;
                 	console.log( "Height dif: "+heightDif +", Width dif: "+widthDif);
+                	
+                	
+                	
+                	
                 	 
                 	
                 	if(heightDif < widthDif) {

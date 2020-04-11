@@ -1,4 +1,4 @@
-import FMPicture from './fmpicture';
+import FMPicture2 from './fmpicture2';
 import {
 	  Button,
 	  ButtonGroup,
@@ -12,45 +12,41 @@ import {
 	  ModalHeader,
 	  Row,
 	} from 'reactstrap';
-const React = require('react');
+import { withAuthentication } from '@axa-fr/react-oidc-context-fetch';
+import React, { useState } from 'react'; 
 
 // tag::mediaframe[]
-class MediaFrame2 extends React.Component {
+const MediaFrame2 = (props) => {
 
-	constructor(props) {
-	    super(props);
-	    this.state = {
-	    		 modal: false
-	    };
-	    
-	  }
+	const [modal, setModal] = useState(false);
+	const [count, setCount] = useState(0);
 
-    	
-    	 componentDidMount() {  
-    	 }
-    	 
-    	 componentWillUnmount() {
-    		 
-    	 }
+	React.useEffect(() => {
+
+		let interval = setInterval(() => {
+			setCount(Math.random());
+//			console.log(count);
+		}
+		,"20000");
+		
+		return function cleanup() {
+			 clearInterval(interval);
+		};
+					
+	}, []);
     	     
-        render() {  
-        	 
-            return (
-            		
-            		<Modal
-                    isOpen={this.props.modalIsOpen}
-                    toggle={this.props.toggle}
-                    className="picFrameModal"
-                    	contentClassName="picFrameModalContent"
-                    		backdropClassName = "picFrameBackdrop"
-                    	size="xl">  
-                    <ModalBody onClick={this.props.toggle}>
-                    	<FMPicture onError={this.props.onRequestClose}   changeFreq="20000"/> 
-                    </ModalBody> 
-                  </Modal>
-            
-            );
-        }
+        
+        return (
+        		
+        	<Modal isOpen={props.modalIsOpen} toggle={props.toggle} size="xl"
+                className="picFrameModal" contentClassName="picFrameModalContent" backdropClassName = "picFrameBackdrop" >  
+                <ModalBody onClick={props.toggle}>
+                	<FMPicture2 onError={props.onRequestClose}   picCounter={count}/> 
+                </ModalBody> 
+            </Modal>
+        
+        );
+        
     }
 
 export default MediaFrame2;

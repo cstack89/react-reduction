@@ -1,4 +1,4 @@
-import FMPicture from './fmpicture';
+import FMPicture2 from './fmpicture2';
 import Modal from 'react-modal';
 const React = require('react');
 //const {FMPicture} = require('./fmpicture'); 
@@ -63,7 +63,7 @@ class MediaFrame extends React.Component {
                       overlayClassName="Overlay"
                   >
 
-            		<FMPicture onError={this.props.onRequestClose} changeFreq="20000"/> 
+            		<FMPicture2 onError={this.props.onRequestClose} changeFreq="20000"/> 
                   </Modal>
             		
             		

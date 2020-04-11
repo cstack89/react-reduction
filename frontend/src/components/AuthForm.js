@@ -2,6 +2,7 @@ import logo200Image from 'assets/img/logo/logo_200.png';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import { UserManager, UserManagerSettings, User } from 'oidc-client';
 
 class AuthForm extends React.Component {
   get isLogin() {
@@ -21,6 +22,22 @@ class AuthForm extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
   };
+  
+  //	        RequirePkce: true,
+  //RequireClientSecret: false,
+  //AllowAccessTokensViaBrowser: true
+  getClientSettings() {
+	    return {
+	        authority: 'https://smarthome.fledglingmaker.com/auth/realms/master',
+	        client_id: 'react_spa',
+	        redirect_uri: 'https://smarthome.fledglingmaker.com/auth-callback',
+	        post_logout_redirect_uri: 'https://smarthome.fledglingmaker.com/',
+	        response_type:"code",
+	        scope:"openid profile",
+	        filterProtocolClaims: true,
+	        loadUserInfo: true
+	    };
+	}
 
   renderButtonText() {
     const { buttonText } = this.props;

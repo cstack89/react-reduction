@@ -36,6 +36,7 @@ import {
   NavLink as BSNavLink,
 } from 'reactstrap';
 import bn from 'utils/bemnames';
+import { AuthenticationContext } from '@axa-fr/react-oidc-context';
 
 const sidebarBackground = {
   backgroundImage: `url("${sidebarBgImage}")`,
@@ -80,10 +81,7 @@ const pageContents = [
   },
 ];
 
-const navItems = [
-  { to: '/', name: 'dashboard', exact: true, Icon: MdDashboard },
-  { to: '/pictureframe', name: 'pictureframe', exact: false, Icon: FaImages },
-  { to: '/cards', name: 'cards', exact: false, Icon: MdWeb },
+const navItems = [  
   { to: '/charts', name: 'charts', exact: false, Icon: MdInsertChart },
   { to: '/widgets', name: 'widgets', exact: false, Icon: MdWidgets },
 ];
@@ -109,6 +107,9 @@ class Sidebar extends React.Component {
 
   render() {
     return (
+    		 <AuthenticationContext.Consumer>
+	          {props => {
+	            return (
       <aside className={bem.b()} data-image={sidebarBgImage}>
         <div className={bem.e('background')} style={sidebarBackground} />
         <div className={bem.e('content')}>
@@ -127,21 +128,70 @@ class Sidebar extends React.Component {
             </SourceLink>
           </Navbar>
           <Nav vertical>
-            {navItems.map(({ to, name, exact, Icon }, index) => (
-              <NavItem key={index} className={bem.e('nav-item')}>
-                <BSNavLink
-                  id={`navItem-${name}-${index}`}
-                  className="text-uppercase"
-                  tag={NavLink}
-                  to={to}
-                  activeClassName="active"
-                  exact={exact}
-                >
-                  <Icon className={bem.e('nav-item-icon')} />
-                  <span className="">{name}</span>
-                </BSNavLink>
-              </NavItem>
-            ))}
+	          <NavItem key={0} className={bem.e('nav-item')}>
+	          <BSNavLink
+	            id={`navItem-dashboard-0`}
+	            className="text-uppercase"
+	            tag={NavLink}
+	            to={'/'}
+	            activeClassName="active"
+	            exact={true}
+	          >
+	            <MdDashboard className={bem.e('nav-item-icon')} />
+	            <span className="">dashboard</span>
+	          </BSNavLink>
+	        </NavItem>
+	
+            {props.oidcUser || !props.isEnabled ? (
+                <React.Fragment>
+	                <NavItem key={1} className={bem.e('nav-item')}>
+		            	<BSNavLink
+		                  id={`navItem-pictureframe-1`}
+		                  className="text-uppercase"
+		                  tag={NavLink}
+		                  to={'/pictureframe'}
+		                  activeClassName="active"
+		                  exact={false}
+		                >
+		                  <FaImages className={bem.e('nav-item-icon')} />
+		                  <span className="">pictureframe</span>
+		                </BSNavLink>
+		            </NavItem>
+            		<NavItem key={2} className={bem.e('nav-item')}>
+		            	<BSNavLink
+		                  id={`navItem-cards-2`}
+		                  className="text-uppercase"
+		                  tag={NavLink}
+		                  to={'/cards'}
+		                  activeClassName="active"
+		                  exact={false}
+		                >
+		                  <MdWeb className={bem.e('nav-item-icon')} />
+		                  <span className="">cards</span>
+		                </BSNavLink>
+		            </NavItem>
+	                <NavItem className={bem.e('nav-item')} onClick={props.logout} >
+		              <BSNavLink className={bem.e('text-uppercase')}>
+		                <div className="d-flex">
+		                  <MdExtension className={bem.e('nav-item-icon')} />
+		                  <span className=" align-self-start">Logout</span>
+		                </div>
+		              </BSNavLink>
+		           </NavItem> 
+	          </React.Fragment>
+             
+            ) : (
+                <NavItem  className={bem.e('nav-item')} onClick={props.login} >
+   	              <BSNavLink className={bem.e('text-uppercase')}>
+   	                <div className="d-flex">
+   	                  <MdExtension className={bem.e('nav-item-icon')} />
+   	                  <span className=" align-self-start">Login</span>
+   	                </div>
+   	              </BSNavLink>
+   	            </NavItem>  
+            )}
+	     
+            
 
             <NavItem
               className={bem.e('nav-item')}
@@ -265,6 +315,9 @@ class Sidebar extends React.Component {
           </Nav>
         </div>
       </aside>
+	            );
+	          }}
+	        </AuthenticationContext.Consumer>
     );
   }
 }
