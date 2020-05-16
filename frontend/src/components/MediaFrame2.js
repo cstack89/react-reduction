@@ -41,7 +41,7 @@ const MediaFrame2 = (props) => {
         	<Modal isOpen={props.modalIsOpen} toggle={props.toggle} size="xl"
                 className="picFrameModal" contentClassName="picFrameModalContent" backdropClassName = "picFrameBackdrop" >  
                 <ModalBody onClick={props.toggle}>
-                	<FMPicture2 onError={props.onRequestClose}   picCounter={count}/> 
+                	<FMPicture2 onError={props.onRequestClose}   picCounter={count} PicSession={props.PicSession}/> 
                 </ModalBody> 
             </Modal>
         

@@ -14,28 +14,21 @@ import {
   ListGroup,
   ListGroupItem,
   Row,
-} from 'reactstrap';
-import MediaFrame from 'components/mediaframe';
+} from 'reactstrap'; 
 import MediaFrame2 from 'components/MediaFrame2';
 import PictureSessionEditor from 'components/picSessionEditor';
 import MaterialTable from 'material-table';
 import { compose, withProps,lifecycle } from 'recompose';
-import { withAuthentication,withFetchToken } from '@axa-fr/react-oidc-context-fetch';
-import {
-	  withFetchRedirectionOn403,
-	  withFetchSilentAuthenticateAndRetryOn401,
-	  fetchToken
-	} from '@axa-fr/react-oidc-fetch-core';
-import { useReactOidc,withOidcUser } from '@axa-fr/react-oidc-context';
-// const {MediaFrame} = require('./components/mediaframe');
-// const {PictureSessionEditor} = require('./components/picSessionEditor');
+import { withAuthentication } from '@axa-fr/react-oidc-context-fetch';
+import { useReactOidc,withOidcUser } from '@axa-fr/react-oidc-context';  
 
 const PictureFramePage2 = (props) => {
 	const [showEditor, setShowEditor] = useState(false);
 	const [show, setShow] = useState(false);
 	const [sessionToEdit, setSessionToEdit] = useState(null);
 	const [tags, setTags] = useState(null);
-	const [picSessions, setPicSessions] = useState(null); 
+	const [picSessions, setPicSessions] = useState([]); 
+	const [PicSession, setPicSession] = useState(null);
 	
 	
 	const {fetch : authFetch } = props;
@@ -53,32 +46,8 @@ const PictureFramePage2 = (props) => {
 	  React.useEffect(() => {
 	
 			
-			
-			// This "fetch" manage more than the orginal fetch
-		  authFetch('/merlinserver/getpictureframesessions')
-			        .then(function(response) {
-			        	if (!response.ok) { 
-		       				 
-							 console.log(response.status);
-							 console.log(response.statusText);
-							// if(this.interval) {
-							// clearInterval(this.interval);
-							// }
-							//              
-							// this.props.onError();
-							// throw new Error("Rejected 1!");
-	     	            } else {
-	     	            	// return response.text();
-	     	            	 return response.json();
-	     	            }
-			        })
-			        .then(function(body) {
-			        	if(body !== undefined) {
-			        		console.log( body); 
-			        	}
-			        	
-			        })
-			        .catch(e => alert(e));
+		  refreshPicFrameSessions();
+		
 	 	      
 	 	      
 		  authFetch('/merlinserver/getPictureTags')
@@ -130,6 +99,35 @@ const PictureFramePage2 = (props) => {
    function handleShow() {
 	   setShow(true); 
      }
+   
+   function refreshPicFrameSessions() {
+		// This "fetch" manage more than the orginal fetch
+		  authFetch('/merlinserver/getpictureframesessions')
+			        .then(function(response) {
+			        	if (!response.ok) { 
+		       				 
+							 console.log(response.status);
+							 console.log(response.statusText);
+							// if(this.interval) {
+							// clearInterval(this.interval);
+							// }
+							//              
+							// this.props.onError();
+							// throw new Error("Rejected 1!");
+	     	            } else {
+	     	            	// return response.text();
+	     	            	 return response.json();
+	     	            }
+			        })
+			        .then(function(body) {
+			        	if(body !== undefined) {
+			        		console.log( body); 
+			        		setPicSessions(body);
+			        	}
+			        	
+			        })
+			        .catch(e => alert(e));
+    }
    
   function handleShowEditor() {
 	  authFetch("/merlinserver/createemptysession", { credentials: 'same-origin' })
@@ -219,6 +217,7 @@ const PictureFramePage2 = (props) => {
 						// this.props.onError();
 						// throw new Error("Rejected 1!");
        	            } else {
+       	            	
        	            	// return response.text();
        	            	 return response.json();
        	            }
@@ -236,6 +235,7 @@ const PictureFramePage2 = (props) => {
        		  }
          ).then(
 	        (result) => {
+	        	refreshPicFrameSessions();
 	        	console.log( result); 
 // this.setState({
 // tags: result,
@@ -263,8 +263,45 @@ console.log(error);
 		 toggleEditor();
 	 }
      
+  
+     function deletePictureFrameSession(sessionID) {
+    	 if(window.confirm("You want to delete " + sessionID)) {
+    		 authFetch("/merlinserver/deletepictureframesession", 
+    				 { 
+    			 		method: 'POST',
+    			 		body: sessionID
+    				 })
+                .then(
+        		  (response) => {
+        			  if (!response.ok) { 
+        				 
+    						 console.log(response.status);
+    						 console.log(response.statusText);
+    					
+        	            } else {
+        	            	refreshPicFrameSessions();
+        	            	console.log(response);
+        	            }
+        			 
+        		  }, 
+        		  (error) => {
+
+    					 console.log(error);
+        		  }
+          ).catch(function(error) {
+               console.log(error);
+    	      });
+    	 }
+		 
+		 
+	 }
 
  
+     function setupSessionView(rowData) {
+    	 setPicSession(rowData);
+    	 handleShow();
+    	 
+     }
  
    
   
@@ -324,14 +361,77 @@ console.log(error);
      			        
      			    
      			      </Row> 
+     			   
+     			     <Row>
+	  			        <Col md={12} sm={12} xs={12} className="mb-3">
+			  			      <MaterialTable
+		     		          columns={[
+		     		            { title: 'Session Name', field: 'sessionName' },  
+		     		            { title: 'Username', field: 'username' },
+		     		            { title: 'Num Records', field: 'numRecords',type:"numeric" },
+		     		            { title: 'Date Last Used', field: 'dateLastUsed', render: rowData => {
+		     		            	let d = new Date(rowData.dateLastUsed);
+		     		            	return (<p> {d.toLocaleDateString("en-US")} </p>);
+		     		            }},
+		     		            { title: 'Date Created', field: 'dateCreated', render: rowData => {
+		     		            	let d = new Date(rowData.dateCreated);
+		     		            	return (<p> {d.toLocaleDateString("en-US")} </p>);
+		     		            }},
+		     		            { title: 'Date Modified', field: 'dateModified', render: rowData => {
+		     		            	let d = new Date(rowData.dateModified);
+		     		            	return (<p> {d.toLocaleDateString("en-US")} </p>);
+		     		            }},
+		     		            { title: 'Interval', field: 'interval',type:"numeric" },
+		     		            { title: 'Private', field: 'privateSession', type:"boolean"}
+		     		          ]}
+		     		          data={picSessions}
+			  			    actions={[
+			  			    	{
+				  			          icon: 'slideshow',
+				  			          tooltip: 'View Session',
+				  			          onClick: (event, rowData) => setupSessionView(rowData)
+				  			    },
+			  			    	{
+			  			          icon: 'edit',
+			  			          tooltip: 'Edit Session',
+			  			          onClick: (event, rowData) => alert("You edited " + rowData)
+			  			        },
+			  			        {
+			  			        	
+			  			          icon: 'delete',
+			  			          tooltip: 'Delete Session',
+			  			          onClick: (event, rowData) => deletePictureFrameSession(rowData.sessionid)
+			  			        },
+			  			        {
+			  			          icon: 'add',
+			  			          tooltip: 'Add Session',
+			  			          isFreeAction: true,
+			  			          onClick: (event) => handleShowEditor()
+			  			        },
+			  			        {
+			  			          icon: 'refresh',
+			  			          tooltip: 'Refresh',
+			  			          isFreeAction: true,
+			  			          onClick: (event) => refreshPicFrameSessions()
+				  			    }
+			  			      ]}
+		     		          title="Picture Frame Sessions"
+		     		        />
+	  			       
+	  			        </Col>
+  			       
+  			        </Row> 
      			        
      			       <Row>
      			        <Col md={12} sm={12} xs={12} className="mb-3">
-     			        	<MediaFrame2  modalIsOpen={show}  toggle={toggle} />
+     			        	<MediaFrame2  modalIsOpen={show}  toggle={toggle} PicSession={PicSession}/>
      			       
      			        </Col>
      			       
      			        </Row> 
+     			        
+     			        
+     			      
      			      
      			 
      			    </Page>

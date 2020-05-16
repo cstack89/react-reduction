@@ -25,15 +25,80 @@ const FMPicture2 = (props) => {
 //		 });
 		 
 //		 console.log(props.picCounter);
-		 getPicName();
+		 getPicNameWithSession();
 		
 		  }, [props.picCounter]);
     	 
 
-
+	 
           
         
-        
+        function getPicNameWithSession() { 
+        	authFetch("/merlinserver/requestPictureLocation/withSession", 
+       			 { 
+       		 		method: 'POST',
+       		 		body: JSON.stringify(props.PicSession), 
+       		 	    headers: { 
+       		 	        'Content-Type': 'application/json'
+       		 	    }
+       			 })
+              .then(
+            		  (response) => {
+            			  if (!response.ok) { 
+//                	    	  setPicLoaded(false); // This used to be uncommented
+//            				  console.log(response.status);
+//            				  console.log(response.statusText);
+//                			  if(this.interval) {
+//                				  clearInterval(this.interval);
+//                			  }
+//               
+//                	          this.props.onError();
+//                	          throw new Error("Rejected 1!");
+            	            } else {
+//            	            	 return response.text();
+            	            	 return response.json();
+            	            }
+            			 
+            		  }, 
+            		  (error) => {
+//            	    	  setPicLoaded(false); // This used to be uncommented
+//            			  console.log(error);
+//            			  if(this.interval) {
+//            				  clearInterval(this.interval);
+//            			  }
+//           
+//            	          this.props.onError();
+//            	          reject(new Error("Rejected 2!"));
+            		  }
+              ).then(
+    	        (result) => {
+    	        	console.log( result);
+    	        	setNextPic1Meta(result);
+    	        	
+    	        	getPic(result);
+	        	
+    	        	
+//	    	    	  setPicLoaded(false); // This used to be uncommented
+    	        		
+
+    	        },
+    	        // Note: it's important to handle errors here
+    	        // instead of a catch() block so that we don't swallow
+    	        // exceptions from actual bugs in components.
+    	        (error) => {
+//      	    	  setPicLoaded(false); // This used to be uncommented
+//    	        	console.log(error);
+//      	          clearInterval(this.interval);
+//      	          this.props.onError();
+    	        }
+    	      ).catch(function(error) {
+    	    	
+//    	    	  setPicLoaded(false); // This used to be uncommented
+//    	          console.log(error);
+//    	          clearInterval(this.interval);
+//    	          this.props.onError();
+    	      });
+        }
        function getPicName() { 
         	
 			authFetch("/merlinserver/requestPictureLocation")

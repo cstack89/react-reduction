@@ -45,6 +45,8 @@ const sidebarBackground = {
 };
 
 const navComponents = [
+  { to: '/cookbook', name: 'cookbook', exact: false, Icon: MdRadioButtonChecked },
+  { to: '/tiddlywiki', name: 'wiki', exact: false, Icon: MdRadioButtonChecked },
   { to: '/buttons', name: 'buttons', exact: false, Icon: MdRadioButtonChecked },
   {
     to: '/button-groups',
@@ -53,6 +55,7 @@ const navComponents = [
     Icon: MdGroupWork,
   },
   { to: '/forms', name: 'forms', exact: false, Icon: MdChromeReaderMode },
+  { to: '/links', name: 'links', exact: false, Icon: MdChromeReaderMode },
   { to: '/input-groups', name: 'input groups', exact: false, Icon: MdViewList },
   {
     to: '/dropdowns',
@@ -157,6 +160,7 @@ class Sidebar extends React.Component {
 		                  <span className="">pictureframe</span>
 		                </BSNavLink>
 		            </NavItem>
+
             		<NavItem key={2} className={bem.e('nav-item')}>
 		            	<BSNavLink
 		                  id={`navItem-cards-2`}

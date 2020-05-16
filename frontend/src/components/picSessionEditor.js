@@ -44,8 +44,7 @@ class PictureSessionEditor extends React.Component {
             super();
             this.state = {  
             		mustHaveSource: [], 
-            		boostedSource: [], 
-            		deboostedSource: [], 
+            		boostedSource: [],  
             		missingSource: [],     
             		sessionModel: null
             	};
@@ -53,8 +52,7 @@ class PictureSessionEditor extends React.Component {
   
             
             this.handleMustHaveChange  = this.handleMustHaveChange.bind(this);  
-            this.handleBoostedChange  = this.handleBoostedChange.bind(this); 
-            this.handleDeboostedChange  = this.handleDeboostedChange.bind(this);  
+            this.handleBoostedChange  = this.handleBoostedChange.bind(this);   
             this.handleMissingChange  = this.handleMissingChange.bind(this); 
             this.handleInputChange = this.handleInputChange.bind(this); 
             this.onSubmit  = this.onSubmit.bind(this);  
@@ -63,37 +61,26 @@ class PictureSessionEditor extends React.Component {
     	 componentDidMount() {
     		 
     		 if(this.props.sessionModel !== null) {
- 	        	console.log(this.props.sessionModel);
- 	        	let deboostedfilter = [];
+ 	        	console.log(this.props.sessionModel); 
  	        	let musthavefilter = [];
  	        	let boostedfilter = [];
  	        	let missingfilter = []; 
  	        	if(this.props.sessionModel.missingTags !== null) {
- 	        		let tmissing=this.props.sessionModel.missingTags;
- 	        		deboostedfilter.concat(tmissing);
+ 	        		let tmissing=this.props.sessionModel.missingTags; 
  	        		musthavefilter.concat(tmissing);
  	        		boostedfilter.concat(tmissing); 
- 	        	}
- 	        	if(this.props.sessionModel.deboostedTags !== null) {
- 	        		let tdeboosted= this.props.sessionModel.deboostedTags;
- 	        		missingfilter.concat(tdeboosted);
- 	        		musthavefilter.concat(tdeboosted);
- 	        		boostedfilter.concat(tdeboosted); 
- 	        	}
+ 	        	} 
  	        	if(this.props.sessionModel.mustHaveTags !== null) {
  	        		let tmusthave= this.props.sessionModel.mustHaveTags; 
- 	        		missingfilter.concat(tmusthave);
- 	        		deboostedfilter.concat(tmusthave);
+ 	        		missingfilter.concat(tmusthave); 
  	        		boostedfilter.concat(tmusthave); 
  	        	}
  	        	if(this.props.sessionModel.boostedTags !== null) {
  	        		let tboosted= this.props.sessionModel.boostedTags; 
- 	        		missingfilter.concat(tboosted);
- 	        		deboostedfilter.concat(tboosted);
+ 	        		missingfilter.concat(tboosted); 
  	        		musthavefilter.concat(tboosted); 
  	        	} 
- 	        	this.setState({    
- 	           		deboostedSource:  this.props.tags.filter(tag => deboostedfilter.indexOf(tag) ===-1),
+ 	        	this.setState({     
  	           		boostedSource:  this.props.tags.filter(tag => boostedfilter.indexOf(tag) ===-1),
  	           		mustHaveSource:  this.props.tags.filter(tag => musthavefilter.indexOf(tag) ===-1),
  	           		missingSource:  this.props.tags.filter(tag => missingfilter.indexOf(tag) ===-1),    
@@ -112,64 +99,43 @@ class PictureSessionEditor extends React.Component {
     	 
     	 handleMustHaveChange(event ) {
     		 
-    		 let missingfilter = event.target.value.concat(this.state.sessionModel.boostedTags,this.state.sessionModel.deboostedTags);
-    		 let boostedfilter = event.target.value.concat(this.state.sessionModel.deboostedTags,this.state.sessionModel.missingTags);
-         	let deboostedfilter = event.target.value.concat(this.state.sessionModel.boostedTags,this.state.sessionModel.missingTags);
-        	this.setState({  
+    		 let missingfilter = event.target.value.concat(this.state.sessionModel.boostedTags );
+    		 let boostedfilter = event.target.value.concat( this.state.sessionModel.missingTags);
+         	 this.setState({  
         		sessionModel: {
                     ...this.state.sessionModel,
                     mustHaveTags: event.target.value
                    },
-        		missingSource:  this.props.tags.filter(tag => missingfilter.indexOf(tag) ===-1),
-        		deboostedSource:  this.props.tags.filter(tag => deboostedfilter.indexOf(tag) ===-1),
+        		missingSource:  this.props.tags.filter(tag => missingfilter.indexOf(tag) ===-1), 
         		boostedSource:  this.props.tags.filter(tag => boostedfilter.indexOf(tag) ===-1)
         	});
          	
          }
         handleBoostedChange(event ) {
         	 
-        	let missingfilter = event.target.value.concat(this.state.sessionModel.mustHaveTags,this.state.sessionModel.deboostedTags);
-        	let musthavefilter = event.target.value.concat(this.state.sessionModel.deboostedTags,this.state.sessionModel.missingTags);
-        	let deboostedfilter = event.target.value.concat(this.state.sessionModel.mustHaveTags,this.state.sessionModel.missingTags);
-       	this.setState({   
+        	let missingfilter = event.target.value.concat(this.state.sessionModel.mustHaveTags );
+        	let musthavefilter = event.target.value.concat( this.state.sessionModel.missingTags);
+         this.setState({   
        		sessionModel: {
                 ...this.state.sessionModel,
                 boostedTags: event.target.value
                },
-       		missingSource:  this.props.tags.filter(tag => missingfilter.indexOf(tag) ===-1),
-       		deboostedSource:  this.props.tags.filter(tag => deboostedfilter.indexOf(tag) ===-1),
+       		missingSource:  this.props.tags.filter(tag => missingfilter.indexOf(tag) ===-1), 
        		mustHaveSource:  this.props.tags.filter(tag => musthavefilter.indexOf(tag) ===-1)
        	});
     	
         }
         
-        handleDeboostedChange(event ) {
-         
-	   		let missingfilter = event.target.value.concat(this.state.sessionModel.mustHaveTags,this.state.sessionModel.boostedTags);
-	    	let musthavefilter = event.target.value.concat(this.state.sessionModel.boostedTags,this.state.sessionModel.missingTags);
-	    	let boostedfilter = event.target.value.concat(this.state.sessionModel.mustHaveTags,this.state.sessionModel.missingTags);
-	   	this.setState({  
-	   		sessionModel: {
-                ...this.state.sessionModel,
-                deboostedTags: event.target.value
-               },
-	   		missingSource:  this.props.tags.filter(tag => missingfilter.indexOf(tag) ===-1),
-	   		boostedSource:  this.props.tags.filter(tag => boostedfilter.indexOf(tag) ===-1),
-	   		mustHaveSource:  this.props.tags.filter(tag => musthavefilter.indexOf(tag) ===-1)
-	   		});
-        	
-        }
+        
         handleMissingChange(event ) {
-        	let deboostedfilter = event.target.value.concat(this.state.sessionModel.mustHaveTags,this.state.sessionModel.boostedTags);
-        	let musthavefilter = event.target.value.concat(this.state.sessionModel.boostedTags,this.state.deboosted);
-        	let boostedfilter = event.target.value.concat(this.state.sessionModel.mustHaveTags,this.state.deboosted);
+        	 let musthavefilter = event.target.value.concat( this.state.deboosted);
+        	let boostedfilter = event.target.value.concat( this.state.deboosted);
         	this.setState({ 
         		sessionModel: {
 	                ...this.state.sessionModel,
 	                missingTags: event.target.value
 	               },
-     
-	       		deboostedSource:  this.props.tags.filter(tag => deboostedfilter.indexOf(tag) ===-1),
+      
 	       		boostedSource:  this.props.tags.filter(tag => boostedfilter.indexOf(tag) ===-1),
 	       		mustHaveSource:  this.props.tags.filter(tag => musthavefilter.indexOf(tag) ===-1)
        		});
@@ -200,8 +166,7 @@ class PictureSessionEditor extends React.Component {
                     ...this.state.sessionModel,
                     [name]: value
                    }
-            
-              
+                
             });
           }
       
@@ -217,6 +182,19 @@ class PictureSessionEditor extends React.Component {
                     <DialogContent>
                    
                     <form className="picSessionForm" autoComplete="off" onSubmit={this.onSubmit}>
+                    <Row>
+                    <Col md={6} sm={6} xs={12} className="mb-3">
+	                    <FormControl className="picSessionFormControl">
+	                    <InputLabel htmlFor="interval">Name</InputLabel>
+	                    
+	                    <Input   name="sessionName" id="sessionNameBx"  value={this.state.sessionModel.sessionName} onChange={this.handleInputChange} /> 
+	                 
+	                    </FormControl>
+	                    </Col>
+	                    <Col md={6} sm={6} xs={12} className="mb-3">
+		                   
+	                    </Col>
+                    </Row>
                     <Row>
                     <Col md={6} sm={6} xs={12} className="mb-3">
 	                    <FormControl className="picSessionFormControl">
@@ -255,21 +233,7 @@ class PictureSessionEditor extends React.Component {
                     </Row> 
                     <Row>
                     <Col md={6} sm={6} xs={12} className="mb-3">
-                    <FormControl className="picSessionFormControl" >
-                  	<InputLabel htmlFor="deboosted">Should Not Have</InputLabel>
-                   
-	                    <Select  multiple value={this.state.sessionModel.deboostedTags}
-		                    onChange={this.handleDeboostedChange}
-		                    input={<Input id="deboosted" name="deboosted" />} 
-		                    
-		                  >
-		                   {this.state.deboostedSource.map(tag => (
-		                     <MenuItem key={tag} value={tag} >
-		                       {tag}
-		                     </MenuItem>
-		                   ))}
-		                 </Select>
-	                  </FormControl>
+                     
                     </Col>
                     <Col md={6} sm={6} xs={12} className="mb-3">
                     <FormControl className="picSessionFormControl" >
@@ -343,7 +307,7 @@ class PictureSessionEditor extends React.Component {
 			                    <Col md={6} sm={6} xs={12} className="mb-3"> 
 				                    <InputLabel htmlFor="interval">Interval</InputLabel>
 				                    
-				                    <Input type="number" name="interval" id="intervalBx" placeholder="seconds">{this.state.sessionModel.interval} </Input>
+				                    <Input type="number" name="interval" id="intervalBx" placeholder="seconds" value={this.state.sessionModel.interval} onChange={this.handleInputChange}/> 
 				                  </Col>
 			                    <Col md={6} sm={6} xs={12} className="mb-3"> 
 			                    </Col>
@@ -383,18 +347,3 @@ class PictureSessionEditor extends React.Component {
 
         export default PictureSessionEditor;
   // end::picSessionEditor[]
-// <Select
-// multiple
-// input={<Input id="select-multiple" />}
-// MenuProps={MenuProps}
-// >
-// {scaryAnimals.map(name => (
- // <MenuItem
- // key={name}
- // value={name}
-     
-// >
-// {name}
-// </MenuItem>
-// ))}
-// </Select>

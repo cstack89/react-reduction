@@ -7,7 +7,10 @@ import BadgePage from 'pages/BadgePage';
 import ButtonGroupPage from 'pages/ButtonGroupPage';
 import ButtonPage from 'pages/ButtonPage';
 import CardPage from 'pages/CardPage';
+import LinksPage from 'pages/LinksPage';
 import PictureFramePage2 from 'pages/PictureFramePage2';
+import RecipePage from 'pages/RecipePage';
+import CookbookPage from 'pages/CookbookPage';
 import ChartPage from 'pages/ChartPage';
 // pages
 import DashboardPage from 'pages/DashboardPage';
@@ -17,6 +20,7 @@ import InputGroupPage from 'pages/InputGroupPage';
 import ModalPage from 'pages/ModalPage';
 import ProgressPage from 'pages/ProgressPage';
 import TablePage from 'pages/TablePage';
+import WikiPage from 'pages/WikiPage';
 import TypographyPage from 'pages/TypographyPage';
 import WidgetPage from 'pages/WidgetPage';
 import React from 'react';
@@ -144,6 +148,12 @@ class App extends React.Component {
 	            />
 	            <LayoutRoute
 	              exact
+	              path="/tiddlywiki"
+	              layout={MainLayout}
+	              component={WikiPage}
+	            />
+	            <LayoutRoute
+	              exact
 	              path="/cards"
 	              layout={MainLayout}
 	              component={withOidcSecure(CardPage)}
@@ -156,9 +166,28 @@ class App extends React.Component {
 	            />
 	            <LayoutRoute
 	              exact
+	              path="/recipes"
+	              layout={MainLayout}
+	              component={withOidcSecure(RecipePage)}
+	            />
+	            
+	            <LayoutRoute
+	              exact
+	              path="/cookbook"
+	              layout={MainLayout}
+	              component={CookbookPage}
+	            />
+	            <LayoutRoute
+	              exact
 	              path="/widgets"
 	              layout={MainLayout}
 	              component={WidgetPage}
+	            />
+	            <LayoutRoute
+	              exact
+	              path="/links"
+	              layout={MainLayout}
+	              component={LinksPage}
 	            />
 	            <LayoutRoute
 	              exact
