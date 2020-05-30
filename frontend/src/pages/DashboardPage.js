@@ -1,19 +1,13 @@
 import { AnnouncementCard, TodosCard } from 'components/Card';
-import HorizontalAvatarList from 'components/HorizontalAvatarList';
-import MapWithBubbles from 'components/MapWithBubbles';
-import Page from 'components/Page';
-import ProductMedia from 'components/ProductMedia';
-import SupportTicket from 'components/SupportTicket';
-import UserProgressTable from 'components/UserProgressTable';
-import { IconWidget, NumberWidget } from 'components/Widget';
+import HorizontalAvatarList from 'components/HorizontalAvatarList'; 
+import Page from 'components/Page'; 
+import SupportTicket from 'components/SupportTicket';  
 import { getStackLineChart, stackLineChartOptions } from 'demos/chartjs';
 import {
   avatarsData,
-  chartjs,
-  productsData,
+  chartjs, 
   supportTicketsData,
-  todosData,
-  userProgressTableData,
+  todosData, 
 } from 'demos/dashboardPage';
 import React from 'react';
 import { Bar, Line } from 'react-chartjs-2';
@@ -67,59 +61,7 @@ class DashboardPage extends React.Component {
         title="Dashboard"
         breadcrumbs={[{ name: 'Dashboard', active: true }]}
       >
-        <Row>
-          <Col lg={3} md={6} sm={6} xs={12}>
-            <NumberWidget
-              title="Total Profit"
-              subtitle="This month"
-              number="9.8k"
-              color="secondary"
-              progress={{
-                value: 75,
-                label: 'Last month',
-              }}
-            />
-          </Col>
-
-          <Col lg={3} md={6} sm={6} xs={12}>
-            <NumberWidget
-              title="Monthly Visitors"
-              subtitle="This month"
-              number="5,400"
-              color="secondary"
-              progress={{
-                value: 45,
-                label: 'Last month',
-              }}
-            />
-          </Col>
-
-          <Col lg={3} md={6} sm={6} xs={12}>
-            <NumberWidget
-              title="New Users"
-              subtitle="This month"
-              number="3,400"
-              color="secondary"
-              progress={{
-                value: 90,
-                label: 'Last month',
-              }}
-            />
-          </Col>
-
-          <Col lg={3} md={6} sm={6} xs={12}>
-            <NumberWidget
-              title="Bounce Rate"
-              subtitle="This month"
-              number="38%"
-              color="secondary"
-              progress={{
-                value: 60,
-                label: 'Last month',
-              }}
-            />
-          </Col>
-        </Row>
+       
 
         <Row>
           <Col lg="8" md="12" sm="12" xs="12">
@@ -162,68 +104,7 @@ class DashboardPage extends React.Component {
           </Col>
         </Row>
 
-        <CardGroup style={{ marginBottom: '1rem' }}>
-          <IconWidget
-            bgColor="white"
-            inverse={false}
-            icon={MdThumbUp}
-            title="50+ Likes"
-            subtitle="People you like"
-          />
-          <IconWidget
-            bgColor="white"
-            inverse={false}
-            icon={MdRateReview}
-            title="10+ Reviews"
-            subtitle="New Reviews"
-          />
-          <IconWidget
-            bgColor="white"
-            inverse={false}
-            icon={MdShare}
-            title="30+ Shares"
-            subtitle="New Shares"
-          />
-        </CardGroup>
-
-        <Row>
-          <Col md="6" sm="12" xs="12">
-            <Card>
-              <CardHeader>New Products</CardHeader>
-              <CardBody>
-                {productsData.map(
-                  ({ id, image, title, description, right }) => (
-                    <ProductMedia
-                      key={id}
-                      image={image}
-                      title={title}
-                      description={description}
-                      right={right}
-                    />
-                  ),
-                )}
-              </CardBody>
-            </Card>
-          </Col>
-
-          <Col md="6" sm="12" xs="12">
-            <Card>
-              <CardHeader>New Users</CardHeader>
-              <CardBody>
-                <UserProgressTable
-                  headers={[
-                    <MdPersonPin size={25} />,
-                    'name',
-                    'date',
-                    'participation',
-                    '%',
-                  ]}
-                  usersData={userProgressTableData}
-                />
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
+      
 
         <Row>
           <Col lg={4} md={4} sm={12} xs={12}>
@@ -335,16 +216,6 @@ class DashboardPage extends React.Component {
             />
           </Col>
 
-          <Col lg="8" md="12" sm="12" xs="12">
-            <Card inverse className="bg-gradient-primary">
-              <CardHeader className="bg-gradient-primary">
-                Map with bubbles
-              </CardHeader>
-              <CardBody>
-                <MapWithBubbles />
-              </CardBody>
-            </Card>
-          </Col>
         </Row>
 
         <CardDeck style={{ marginBottom: '1rem' }}>

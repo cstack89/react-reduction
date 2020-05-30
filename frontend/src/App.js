@@ -1,28 +1,15 @@
 import { STATE_LOGIN, STATE_SIGNUP } from 'components/AuthForm';
-import { EmptyLayout, LayoutRoute, MainLayout } from 'components/Layout';
-import AlertPage from 'pages/AlertPage';
+import { EmptyLayout, LayoutRoute, MainLayout } from 'components/Layout'; 
 import AuthModalPage from 'pages/AuthModalPage';
-import AuthPage from 'pages/AuthPage';
-import BadgePage from 'pages/BadgePage';
-import ButtonGroupPage from 'pages/ButtonGroupPage';
-import ButtonPage from 'pages/ButtonPage';
-import CardPage from 'pages/CardPage';
+import AuthPage from 'pages/AuthPage'; 
 import LinksPage from 'pages/LinksPage';
-import PictureFramePage2 from 'pages/PictureFramePage2';
-import RecipePage from 'pages/RecipePage';
-import CookbookPage from 'pages/CookbookPage';
-import ChartPage from 'pages/ChartPage';
+import PictureFramePage2 from 'pages/PictureFramePage2'; 
+import CookbookPage from 'pages/CookbookPage'; 
+import CookbookByCategoryPage from 'pages/CookbookByCategoryPage'; 
+import CookbookByRatingPage from 'pages/CookbookByRatingPage'; 
 // pages
-import DashboardPage from 'pages/DashboardPage';
-import DropdownPage from 'pages/DropdownPage';
-import FormPage from 'pages/FormPage';
-import InputGroupPage from 'pages/InputGroupPage';
-import ModalPage from 'pages/ModalPage';
-import ProgressPage from 'pages/ProgressPage';
-import TablePage from 'pages/TablePage';
-import WikiPage from 'pages/WikiPage';
-import TypographyPage from 'pages/TypographyPage';
-import WidgetPage from 'pages/WidgetPage';
+import DashboardPage from 'pages/DashboardPage';  
+import WikiPage from 'pages/WikiPage';  
 import React from 'react';
 import componentQueries from 'react-component-queries';
 import { BrowserRouter, Redirect, Switch } from 'react-router-dom';
@@ -41,65 +28,9 @@ class App extends React.Component {
 	
 	constructor() {
         super();
-        this.state = { isAuthenticated: false, user: null, show: false};
-        
-//        this.logout = this.logout.bind(this);
-//        this.login = this.login.bind(this);
-        this.onFailure = this.onFailure.bind(this); 
-
-        this.handleShow = this.handleShow.bind(this);
-        this.handleHide = this.handleHide.bind(this);
-        this.testAuth = this.testAuth.bind(this);
-
-      
-    
+   
     }
-	
-	 componentDidMount() { 
-		 this.testAuth();
-		  	
-	 }
-	 
-	 componentWillUnmount() {
-//		 clearInterval(this.interval);
-	 }
-	 
-	 testAuth() {
-		 fetch("/admin/user" , { credentials: 'same-origin' })
-	      .then( res => { console.log(res); 
-	      return res.json();
-	      })
-	      .then(
-	        (result) => {
-	        	if(result.name)
-	        		{ 
-	        		 this.setState({
-	        			 isAuthenticated: true, user: result
-	     	          }); 
-	        		}
 
-	        },
-	        // Note: it's important to handle errors here
-	        // instead of a catch() block so that we don't swallow
-	        // exceptions from actual bugs in components.
-	        (error) => {
-	        	 
-	        }
-	      );
-	    }
-	 
-	 onFailure(error) {
-    	 alert(error);
-    }
-	 
-	 handleShow() {
-//	        this.setState({ show: true });
-	      }
-
-	      handleHide() {
-//	    	  this.setState({isAuthenticated: false, user: null})
-//	        this.testAuth();
-	      }
 	
   render() {
     return (
@@ -139,121 +70,62 @@ class App extends React.Component {
 	              path="/"
 	              layout={MainLayout}
 	              component={DashboardPage}
-	            />
-	            <LayoutRoute
-	              exact
-	              path="/buttons"
-	              layout={MainLayout}
-	              component={ButtonPage}
-	            />
+	            /> 
 	            <LayoutRoute
 	              exact
 	              path="/tiddlywiki"
 	              layout={MainLayout}
 	              component={WikiPage}
-	            />
-	            <LayoutRoute
-	              exact
-	              path="/cards"
-	              layout={MainLayout}
-	              component={withOidcSecure(CardPage)}
-	            />
+	            /> 
 	            <LayoutRoute
 	              exact
 	              path="/pictureframe"
 	              layout={MainLayout}
 	              component={withOidcSecure(PictureFramePage2)}
-	            />
-	            <LayoutRoute
-	              exact
-	              path="/recipes"
-	              layout={MainLayout}
-	              component={withOidcSecure(RecipePage)}
-	            />
-	            
-	            <LayoutRoute
+	            /> 
+	            <LayoutRoute 
 	              exact
 	              path="/cookbook"
 	              layout={MainLayout}
 	              component={CookbookPage}
-	            />
-	            <LayoutRoute
-	              exact
-	              path="/widgets"
+	            /> 
+	            <LayoutRoute 
+	              path="/cookbook/:id"
 	              layout={MainLayout}
-	              component={WidgetPage}
+	              component={CookbookPage}
 	            />
+	            
+	            <LayoutRoute 
+	              exact
+	              path="/cookbookbycategory"
+	              layout={MainLayout}
+	              component={CookbookByCategoryPage}
+	            /> 
+	            <LayoutRoute 
+	              path="/cookbookbycategory/:id"
+	              layout={MainLayout}
+	              component={CookbookByCategoryPage}
+	            />
+	            <LayoutRoute 
+	              exact
+	              path="/cookbookbyrating"
+	              layout={MainLayout}
+	              component={CookbookByRatingPage}
+	            /> 
+	            <LayoutRoute 
+	              path="/cookbookbyrating/:id"
+	              layout={MainLayout}
+	              component={CookbookByRatingPage}
+	            />
+	            
+	            
+	            
+	            
 	            <LayoutRoute
 	              exact
 	              path="/links"
 	              layout={MainLayout}
 	              component={LinksPage}
-	            />
-	            <LayoutRoute
-	              exact
-	              path="/typography"
-	              layout={MainLayout}
-	              component={TypographyPage}
-	            />
-	            <LayoutRoute
-	              exact
-	              path="/alerts"
-	              layout={MainLayout}
-	              component={AlertPage}
-	            />
-	            <LayoutRoute
-	              exact
-	              path="/tables"
-	              layout={MainLayout}
-	              component={TablePage}
-	            />
-	            <LayoutRoute
-	              exact
-	              path="/badges"
-	              layout={MainLayout}
-	              component={BadgePage}
-	            />
-	            <LayoutRoute
-	              exact
-	              path="/button-groups"
-	              layout={MainLayout}
-	              component={ButtonGroupPage}
-	            />
-	            <LayoutRoute
-	              exact
-	              path="/dropdowns"
-	              layout={MainLayout}
-	              component={DropdownPage}
-	            />
-	            <LayoutRoute
-	              exact
-	              path="/progress"
-	              layout={MainLayout}
-	              component={ProgressPage}
-	            />
-	            <LayoutRoute
-	              exact
-	              path="/modals"
-	              layout={MainLayout}
-	              component={ModalPage}
-	            />
-	            <LayoutRoute
-	              exact
-	              path="/forms"
-	              layout={MainLayout}
-	              component={FormPage}
-	            />
-	            <LayoutRoute
-	              exact
-	              path="/input-groups"
-	              layout={MainLayout}
-	              component={InputGroupPage}
-	            />
-	            <LayoutRoute
-	              exact
-	              path="/charts"
-	              layout={MainLayout}
-	              component={ChartPage}
 	            />
 	            <LayoutRoute
 	              exact

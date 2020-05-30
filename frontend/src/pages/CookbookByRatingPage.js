@@ -1,6 +1,5 @@
 
 import Page from 'components/Page';  
-import RecipeCardColumn from 'components/cookbook/RecipeCardColumn';
 import React, { useState } from 'react'; 
 import {
   Button,
@@ -41,10 +40,11 @@ import { useReactOidc,withOidcUser,OidcSecure } from '@axa-fr/react-oidc-context
 import { Editor } from '@tinymce/tinymce-react';
 import RecipeViewer from 'components/cookbook/RecipeViewer';
 import RecipeEditor from 'components/cookbook/RecipeEditor';
+import RecipeCardColumn from 'components/cookbook/RecipeCardColumn';
 import Rating from '@material-ui/lab/Rating';
 import { useHistory } from "react-router-dom";
 
-const CookbookPage = (props ) => {
+const CookbookByRatingPage = (props ) => {
 	const [recipes, setRecipes] = useState([]);
 //	const {fetch : authFetch } = props;
 	const { oidcUser, logout, events } = useReactOidc();
@@ -219,7 +219,7 @@ const CookbookPage = (props ) => {
      
       
       function loadRecipe(e) { 
-    	  history.push("/cookbook/"+e.currentTarget.getAttribute("data-recipe-id"));
+    	  history.push("/cookbookbyrating/"+e.currentTarget.getAttribute("data-recipe-id"));
       }
       
       function loadRecipe2(recipeID) { 
@@ -348,6 +348,7 @@ const CookbookPage = (props ) => {
 //	  <CardText className="recipe-card-text">
 //    	{description}
 //    </CardText>
+//	  
      return( 
     		 activeRecipe 
     		?	  isEditing ? (<RecipeEditor recipe={activeRecipe} doneEditing={doneEditing} />) 
@@ -355,7 +356,7 @@ const CookbookPage = (props ) => {
     					handleTagDelete={handleTagDelete} updateRating={updateRating} magicCount={count} />)
                  : 
 		
-	    <Page title="Cookbook" breadcrumbs={[{ name: 'cookbook', active: true }]}>
+	    <Page title="Cookbook" breadcrumbs={[{ name: 'cookbookbyrating', active: true }]}>
 	    <div>
 	      <Navbar color="light" light expand="md"> 
 	        <NavbarToggler onClick={toggle} />
@@ -370,15 +371,80 @@ const CookbookPage = (props ) => {
 	        </Collapse>
 	      </Navbar>
 	    </div>
- 
-	    
-			<Row>
-			{recipes.map(({ id,pictureURL,title,category,rating }, index) => (
-	        		<RecipeCardColumn  category={category} id={id} pictureURL={pictureURL} 
+	    <Row> 
+        <Col xl={12} lg={12} md={12} sm={12} xs={12} className="mb-3">
+        	<Label>Unrated</Label>
+        </Col>
+      </Row>
+	    <Row>
+	        {recipes.map(({ id,pictureURL,title,category,rating }, index) => (
+	        		<RecipeCardColumn filterRating={true} requiredRating={0} category={category} id={id} pictureURL={pictureURL} 
 	        			title={title} rating={rating} index={index} loadRecipe={loadRecipe}/>
 	        ))}
+	     </Row>
+	    <Row> 
+        <Col xl={12} lg={12} md={12} sm={12} xs={12} className="mb-3">
+        	<Label>5*</Label>
+        </Col>
+      </Row>
+	    <Row>
+	        {recipes.map(({ id,pictureURL,title,category,rating }, index) => (
+	        		<RecipeCardColumn filterRating={true} requiredRating={5} category={category} id={id} pictureURL={pictureURL} 
+	        			title={title} rating={rating} index={index} loadRecipe={loadRecipe}/>
+	        ))}
+	     </Row>
+	     <Row> 
+	        <Col xl={12} lg={12} md={12} sm={12} xs={12} className="mb-3">
+	        	<Label>4*</Label>
+	        </Col>
 	      </Row>
-	     
+		    <Row>
+		        {recipes.map(({ id,pictureURL,title,category,rating }, index) => (
+		        		<RecipeCardColumn filterRating={true} requiredRating={4} category={category} id={id} pictureURL={pictureURL} 
+		        			title={title} rating={rating} index={index} loadRecipe={loadRecipe}/>
+		        ))}
+		     </Row>
+	   
+	    
+	    <Row> 
+        <Col xl={12} lg={12} md={12} sm={12} xs={12} className="mb-3">
+        	<Label>3*</Label>
+        </Col>
+      </Row>
+	    <Row>
+	        {recipes.map(({ id,pictureURL,title,category,rating }, index) => (
+	        		<RecipeCardColumn filterRating={true} requiredRating={3} category={category} id={id} pictureURL={pictureURL} 
+	        			title={title} rating={rating} index={index} loadRecipe={loadRecipe}/>
+	        ))}
+	     </Row>
+   
+    
+	     <Row> 
+	        <Col xl={12} lg={12} md={12} sm={12} xs={12} className="mb-3">
+	        	<Label>2*</Label>
+	        </Col>
+	      </Row>
+		    <Row>
+		        {recipes.map(({ id,pictureURL,title,category,rating }, index) => (
+		        		<RecipeCardColumn filterRating={true} requiredRating={2} category={category} id={id} pictureURL={pictureURL} 
+		        			title={title} rating={rating} index={index} loadRecipe={loadRecipe}/>
+		        ))}
+		     </Row>
+    
+		     <Row> 
+		        <Col xl={12} lg={12} md={12} sm={12} xs={12} className="mb-3">
+		        	<Label>1*</Label>
+		        </Col>
+		      </Row>
+			    <Row>
+			        {recipes.map(({ id,pictureURL,title,category,rating }, index) => (
+			        		<RecipeCardColumn filterRating={true} requiredRating={1} category={category} id={id} pictureURL={pictureURL} 
+			        			title={title} rating={rating} index={index} loadRecipe={loadRecipe}/>
+			        ))}
+			     </Row>
+    
+			
+	      
 	    </Page>
 	    
     		   
@@ -390,5 +456,5 @@ const enhancer= compose(
 		  withAuthentication(fetch)
 		);
 
-export default enhancer(CookbookPage);
+export default enhancer(CookbookByRatingPage);
 //export default CookbookPage;
