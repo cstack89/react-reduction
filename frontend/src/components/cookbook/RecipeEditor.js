@@ -94,7 +94,7 @@ const RecipeEditor = (props) => {
 	const [category, setCategory] = useState(props.recipe.category); 
 	const [changeCount, setChangeCount] = useState(0);
 	const [tagChangeCount, setTagChangeCount] = useState(0);
-	const categories = ["Main Dish","Drinks","Breakfast","Side Dish","Sauce","Seasoning","Cookies","Cake","Pie","Other Dessert","Soup"];
+	const categories = ["Appetizer","Main Dish","Drinks","Breakfast","Side Dish","Sauce","Seasoning","Cookies","Cake","Pie","Other Dessert","Soup"];
 	
 	
 	React.useEffect(() => {

@@ -4,9 +4,7 @@ import AuthModalPage from 'pages/AuthModalPage';
 import AuthPage from 'pages/AuthPage'; 
 import LinksPage from 'pages/LinksPage';
 import PictureFramePage2 from 'pages/PictureFramePage2'; 
-import CookbookPage from 'pages/CookbookPage'; 
-import CookbookByCategoryPage from 'pages/CookbookByCategoryPage'; 
-import CookbookByRatingPage from 'pages/CookbookByRatingPage'; 
+import CookbookPage from 'pages/CookbookPage';   
 // pages
 import DashboardPage from 'pages/DashboardPage';  
 import WikiPage from 'pages/WikiPage';  
@@ -99,23 +97,31 @@ class App extends React.Component {
 	              exact
 	              path="/cookbookbycategory"
 	              layout={MainLayout}
-	              component={CookbookByCategoryPage}
+	            	component={props => (
+		                <CookbookPage {...props} filterByCategory={true} />
+		              )}
 	            /> 
 	            <LayoutRoute 
 	              path="/cookbookbycategory/:id"
 	              layout={MainLayout}
-	              component={CookbookByCategoryPage}
+	            	component={props => (
+		                <CookbookPage {...props} filterByCategory={true} />
+		              )}
 	            />
-	            <LayoutRoute 
+	            <LayoutRoute  
 	              exact
 	              path="/cookbookbyrating"
 	              layout={MainLayout}
-	              component={CookbookByRatingPage}
+	            component={props => (
+		                <CookbookPage {...props} filterByRating={true} />
+		              )}
 	            /> 
 	            <LayoutRoute 
 	              path="/cookbookbyrating/:id"
 	              layout={MainLayout}
-	              component={CookbookByRatingPage}
+	              component={props => (
+		                <CookbookPage {...props} filterByRating={true} />
+		              )}
 	            />
 	            
 	            

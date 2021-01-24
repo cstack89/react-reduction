@@ -43,6 +43,8 @@ import RecipeViewer from 'components/cookbook/RecipeViewer';
 import RecipeEditor from 'components/cookbook/RecipeEditor';
 import Rating from '@material-ui/lab/Rating';
 import { useHistory } from "react-router-dom";
+import CookbookByCategory from 'components/cookbook/CookbookByCategory';
+import CookbookByRating from 'components/cookbook/CookbookByRating';
 
 const CookbookPage = (props ) => {
 	const [recipes, setRecipes] = useState([]);
@@ -221,7 +223,13 @@ const CookbookPage = (props ) => {
       function loadRecipe(e) { 
     	  history.push("/cookbook/"+e.currentTarget.getAttribute("data-recipe-id"));
       }
+      function loadRecipeFilterCategory(e) { 
+    	  history.push("/cookbookbycategory/"+e.currentTarget.getAttribute("data-recipe-id"));
+      }
       
+      function loadRecipeFilterRating(e) {
+    	  history.push("/cookbookbyrating/"+e.currentTarget.getAttribute("data-recipe-id"));
+      }
       function loadRecipe2(recipeID) { 
     	  console.log("Recipe id: "+recipeID);
     	  
@@ -336,7 +344,9 @@ const CookbookPage = (props ) => {
 	      				 
 							 console.log(response.status);
 							 console.log(response.statusText); 
-	      	            }  
+	      	            } else {
+	      	            	setCount(count+1);
+	      	            } 
 	      		  }, 
 	      		  (error) => {
 						 console.log(error); 
@@ -350,36 +360,43 @@ const CookbookPage = (props ) => {
 //    </CardText>
      return( 
     		 activeRecipe 
-    		?	  isEditing ? (<RecipeEditor recipe={activeRecipe} doneEditing={doneEditing} />) 
+    		?	  isEditing ? (<RecipeEditor recipe={activeRecipe} doneEditing={doneEditing} />
+    				) 
     				: (<RecipeViewer recipe={activeRecipe} editCallback={editRecipe} handleTagAdd={handleTagAdd}
-    					handleTagDelete={handleTagDelete} updateRating={updateRating} magicCount={count} />)
-                 : 
+    					handleTagDelete={handleTagDelete} updateRating={updateRating} magicCount={count} /> 
+    							)
+                 : (<Page title="Cookbook" breadcrumbs={[{ name: 'cookbook', active: true }]}>
+         	    <div>
+      	      <Navbar color="light" light expand="md"> 
+      	        <NavbarToggler onClick={toggle} />
+      	        <Collapse isOpen={isOpen} navbar>
+      	          <Nav className="mr-auto" navbar>
+      	          {loadedUser && 
+      	        	  <NavItem>
+                    		<NavLink  onClick={addRecipe}>Add Recipe</NavLink>
+      	              </NavItem>
+      	              } 
+      	          </Nav> 
+      	        </Collapse>
+      	      </Navbar>
+      	    </div>
+       
+      	  {props.filterByCategory ? (<CookbookByCategory recipes={recipes} loadRecipe={loadRecipeFilterCategory}/>
+      	  		) : 
+   		(props.filterByRating ? (<CookbookByRating recipes={recipes} loadRecipe={loadRecipeFilterRating}/>
+   				) : 
+  	 (
+      			<Row>
+      			{recipes.map(({ id,pictureURL,title,category,rating }, index) => (
+      	        		<RecipeCardColumn  category={category} id={id} pictureURL={pictureURL} 
+      	        			title={title} rating={rating} index={index} loadRecipe={loadRecipe}/>
+      	        ))}
+      	      </Row>
+      	      ))}
+      	     
+      	    </Page>)
 		
-	    <Page title="Cookbook" breadcrumbs={[{ name: 'cookbook', active: true }]}>
-	    <div>
-	      <Navbar color="light" light expand="md"> 
-	        <NavbarToggler onClick={toggle} />
-	        <Collapse isOpen={isOpen} navbar>
-	          <Nav className="mr-auto" navbar>
-	          {loadedUser && 
-	        	  <NavItem>
-              		<NavLink  onClick={addRecipe}>Add Recipe</NavLink>
-	              </NavItem>
-	              } 
-	          </Nav> 
-	        </Collapse>
-	      </Navbar>
-	    </div>
- 
 	    
-			<Row>
-			{recipes.map(({ id,pictureURL,title,category,rating }, index) => (
-	        		<RecipeCardColumn  category={category} id={id} pictureURL={pictureURL} 
-	        			title={title} rating={rating} index={index} loadRecipe={loadRecipe}/>
-	        ))}
-	      </Row>
-	     
-	    </Page>
 	    
     		   
      			
