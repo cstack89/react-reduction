@@ -129,6 +129,13 @@ const PictureFramePage2 = (props) => {
 			        .catch(e => alert(e));
     }
    
+   function editPictureFrameSession(sessionID) {
+	   setSessionToEdit(sessionID);
+     	setShowEditor(true);
+		 
+		 
+	 }
+   
   function handleShowEditor() {
 	  authFetch("/merlinserver/createemptysession", { credentials: 'same-origin' })
 	       .then(
@@ -394,7 +401,7 @@ console.log(error);
 			  			    	{
 			  			          icon: 'edit',
 			  			          tooltip: 'Edit Session',
-			  			          onClick: (event, rowData) => alert("You edited " + rowData)
+			  			          onClick: (event, rowData) => editPictureFrameSession(rowData.sessionid)
 			  			        },
 			  			        {
 			  			        	
